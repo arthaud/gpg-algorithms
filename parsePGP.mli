@@ -14,6 +14,7 @@ val read_mpi :
 val read_mpis :
   < read_byte : int; read_string : int -> string; .. > -> Packet.mpi list
 val parse_pubkey_info : Packet.packet -> Packet.pubkeyinfo
+val parse_modulus : Packet.packet -> Packet.mpi
 val parse_sigsubpacket_length : < read_byte : int; .. > -> int
 val read_sigsubpacket :
   < read_byte : int; read_string : int -> string; .. > -> Packet.sigsubpacket

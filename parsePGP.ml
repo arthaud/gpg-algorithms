@@ -204,6 +204,27 @@ let parse_pubkey_info packet =
     pk_keylen = (match algorithm with |18|19 -> psize | _ -> mpi.mpi_bits);
   }
 
+let parse_modulus packet =
+    let cin = new Channel.string_in_channel packet.packet_body 0 in
+    let version = cin#read_byte in
+    match version with
+        | 2 | 3 ->
+            cin#skip 7;
+            read_mpi cin
+        | 4 ->
+            cin#skip 4;
+            let algorithm = cin#read_byte in
+            let mpi = match algorithm with
+                | 18 -> {mpi_bits = 0; mpi_data = ""}
+                | 19 ->
+                        let length = cin#read_int_size 1 in
+                        cin#skip length;
+                        read_mpi cin
+                | _ ->  read_mpi cin
+            in
+            mpi
+        |_ -> failwith (sprintf "Unexpected pubkey version: %d" version)
+
 (********************************************************)
 
 

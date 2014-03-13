@@ -21,7 +21,7 @@ OCAMLOPTFLAGS=$(COMMONCAMLFLAGS) $(CAMLLIBS:.cma=.cmxa)
 
 ALLOBJS=pMap.cmx pSet.cmx utils.cmx settings.cmx common.cmx channel.cmx \
 		packet.cmx parsePGP.cmx sStream.cmx key.cmx keyMerge.cmx fixkey.cmx \
-		fingerprint.cmx
+		fingerprint.cmx keydump.cmx
 
 all: listall
 

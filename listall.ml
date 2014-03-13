@@ -16,11 +16,9 @@ let write_key key =
         let pubkey = parse_pubkey_info packet_pubkey in
         let algo = pk_alg_to_ident pubkey.pk_alg in
         let keyid, _ = Fingerprint.keyids_from_key ~short:false key in
-        let n = parse_modulus packet_pubkey in
-        print_string "##########################################\n";
-        List.iter print_packet key;
-        printf "pub  %4d%s 0x%s\n" pubkey.pk_keylen algo (hexdump keyid);
-        printf "n (%d) = 0x%s\n" n.mpi_bits (hexdump n.mpi_data)
+        let uids = List.filter (fun packet -> packet.packet_type = User_ID_Packet) key in
+        printf "pub   %4d%s/%s\n" pubkey.pk_keylen algo (String.uppercase (hexdump keyid));
+        List.iter (fun packet -> printf "uid         %s\n" packet.packet_body) uids;
     with
         |Overlong_mpi -> printf "Error: exception Overlong_mpi\n"
 

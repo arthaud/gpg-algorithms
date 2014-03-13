@@ -1,0 +1,67 @@
+#!/bin/bash
+
+trap_exit() {
+    printf "\n$2"
+    trap -- "$1"
+    kill "-$1" "$$"
+}
+
+# setup signal traps
+for signal in TERM HUP QUIT
+do
+    trap "trap_exit $signal \"$signal signal caught. Exiting...\"" "$signal"
+done
+trap 'trap_exit INT "Aborted by user! Exiting..."' INT
+trap 'trap_exit ERR "An unknown error has occurred. Exiting..."' ERR
+
+# help message
+if [[ $# != 2 || $1 = "-h" ]]
+then
+    echo "usage: $0 [-h] <url> <dest>"
+    echo ""
+    echo "Fetch a keydump from url to dest"
+else
+    url=${1%/}
+    dest=${2%/}
+    CURL='curl -fL --progress-bar'
+
+    if [[ ! -d "$dest" ]]
+    then
+        echo "$0: error: $dest is not a directory"
+        exit 1
+    fi
+
+    cd "$dest"
+
+    echo "Fetching $url/MD5SUMS"
+    $CURL -o MD5SUMS "$url/MD5SUMS"
+
+    if [[ $? = 22 ]]
+    then
+        echo "$0: error: can't fetch $url/MD5SUMS"
+        exit 2
+    fi
+
+    cut -d ' ' -s -f 3 MD5SUMS | while read f
+    do
+        if [[ "$f" != *all* ]] # not like "sks-dump-allfiles.tar"
+        then
+            echo "Fetching $url/$f"
+            $CURL -o "$f" "$url/$f"
+        fi
+    done
+
+    echo "Performing md5sum"
+
+    trap - ERR
+    md5sum -c MD5SUMS
+
+    cut -d ' ' -s -f 3 MD5SUMS | while read f
+    do
+        if [[ -f "$f" ]] && [[ "$f" == *.bz2 ]]
+        then
+            echo "Decompressing $f"
+            bzip2 -d "$f"
+        fi
+    done
+fi 

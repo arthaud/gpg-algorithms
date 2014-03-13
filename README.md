@@ -41,9 +41,10 @@ Quoting [sks-keyserver wiki](https://bitbucket.org/skskeyserver/sks-keyserver/wi
 >  * http://pgp.jjim.de/sksdump/  (v4/v6) every Friday (~01:30 UTC), loc. Duessseldorf DE, 1.5MiB/s per con. parallel download allowed
 >   ** https://pgp.jjim.de/sksdump/ (self signed SSL available, same rules apply)
 
+You can use `fetchall` to easily fetch a keydump.
+
 TODO
 ----
 
-* *fetchall* to automatically fetch a keydump
 * *pgcd* to try to factor some GPG keys
 * *graph* to generate a graph of all of the signature relationships in GPG

@@ -6,7 +6,7 @@ open ParsePGP
 (* hexdump : string -> string *)
 let hexdump bytes =
     let result = ref "" in
-    String.iter (fun c -> result := !result ^ sprintf "%x" (int_of_char c)) bytes;
+    String.iter (fun c -> result := !result ^ sprintf "%02x" (int_of_char c)) bytes;
     !result
 
 (* write_key : key -> unit *)

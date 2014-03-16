@@ -23,10 +23,16 @@ ALLOBJS=pMap.cmx pSet.cmx utils.cmx settings.cmx common.cmx channel.cmx \
 		packet.cmx parsePGP.cmx sStream.cmx key.cmx keyMerge.cmx fixkey.cmx \
 		fingerprint.cmx keydump.cmx
 
-all: listall
+all: listall exportrsa gcd
 
 listall: $(ALLOBJS) listall.cmx
 	$(OCAMLOPT) -o listall $(OCAMLOPTFLAGS) $(ALLOBJS) listall.cmx
+
+exportrsa: $(ALLOBJS) exportrsa.cmx
+	$(OCAMLOPT) -o exportrsa $(OCAMLOPTFLAGS) $(ALLOBJS) exportrsa.cmx
+
+gcd: gcd.cpp
+	g++ -Wall -O3 -o gcd -lgmpxx -lgmp gcd.cpp
 
 # Special case
 keyMerge.cmo: keyMerge.ml
@@ -54,7 +60,7 @@ clean:
 	rm -f *.cm[iox]
 	rm -f *.annot
 	rm -f .depend
-	rm -f listall
+	rm -f listall exportrsa gcd
 
 dep:
 	$(OCAMLDEP) $(INCLUDES) *.mli *.ml > .depend

@@ -6,13 +6,14 @@ GPG-algorithms
 
 For now :
 * *listall* can display all GPG keys
+* *gcd* can compute the gcd of each pair of GPG keys, see below
 
 Build
 -----
 
-To build the project, you need **ocaml** and **cryptokit**.
+To build the project, you need **ocaml**, **cryptokit** and **gmp**.
 
-On Archlinux, simply run `yaourt ocaml-cryptokit`
+On Archlinux, simply run `yaourt -S ocaml gmp ocaml-cryptokit`
 
 After, you just have to run `make dep` and then `make all`
 
@@ -43,8 +44,19 @@ Quoting [sks-keyserver wiki](https://bitbucket.org/skskeyserver/sks-keyserver/wi
 
 You can use `fetchall` to easily fetch a keydump.
 
+GCD
+---
+
+When you have a flaw in a random number generator and that you are generating RSA keys,
+it is possible that you choose twice the same *p*. That makes your keys vulnerable, because
+someone could compute the gcd of each pair of keys and find this *p*, and so break our keys.
+
+The idea here is to compute the gcd of each pair of RSA keys.
+
+First, make a dump of all RSA keys by running `./exportrsa *.pgp > dump_rsa`
+Then, run `./gcd dump_rsa`
+
 TODO
 ----
 
-* *pgcd* to try to factor some GPG keys
 * *graph* to generate a graph of all of the signature relationships in GPG

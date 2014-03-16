@@ -31,8 +31,13 @@ let sys_args =
     List.rev !args
 
 let _ =
-    if List.length sys_args < 2 then
-        printf "usage: ./listall [FILE]...\n"
+    if List.length sys_args < 2 || (List.length sys_args = 2 && (Sys.argv.(1) = "-h" || Sys.argv.(1) = "--help")) then
+    (
+        printf "usage: ./listall [-h] FILE...\n\n";
+        printf "List the GPG keys contained in the given .gpg files.\n"
+    )
     else
+    (
         let files = List.tl sys_args in
         List.iter (fun file -> List.iter write_key (Keydump.get_keys file [])) files
+    )

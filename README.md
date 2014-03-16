@@ -11,9 +11,9 @@ For now :
 Build
 -----
 
-To build the project, you need **ocaml**, **cryptokit** and **gmp**.
+To build the project, you need **ocaml**, **cryptokit**, **GMP** and **SFML**.
 
-On Archlinux, simply run `yaourt -S ocaml gmp ocaml-cryptokit`
+On Archlinux, simply run `yaourt -S ocaml gmp sfml ocaml-cryptokit`
 
 After, you just have to run `make dep` and then `make all`
 
@@ -53,8 +53,10 @@ someone could compute the gcd of each pair of keys and find this *p*, and so bre
 
 The idea here is to compute the gcd of each pair of RSA keys.
 
-First, make a dump of all RSA keys by running `./exportrsa *.pgp > dump_rsa`
-Then, run `./gcd dump_rsa`
+* First, make a dump of all RSA keys by running `./exportrsa *.pgp > dump_rsa`
+* Then, run `./gcd dump_rsa`
+
+A distributed version is available, see `./gcd_server.py -h` and `./gcd_client -h`
 
 TODO
 ----
